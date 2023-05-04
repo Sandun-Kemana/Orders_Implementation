@@ -11,7 +11,7 @@ const clientSecret = "4ref7KnLWpu1wH4wMpnzcZUCDhYLKBMn";
 const apiUrl = "https://api.australia-southeast1.gcp.commercetools.com";
 const authUrl = "https://auth.australia-southeast1.gcp.commercetools.com";
 
-const orderUrl = "https://commercetools.kemanamagento.web.id/order";
+const orderUrl = "https://commercetools.kemanamagento.web.id/order/";
 
 const authMiddleware = createAuthMiddlewareForClientCredentialsFlow({
   host: authUrl,
@@ -40,7 +40,7 @@ async function main() {
       const orders = result.body.results;
       // Log orders to console
       console.log("Orders:", orders);
-      // Submit orders to customerUrl using POST method
+      // Submit orders to orderUrl using POST method
       return fetch(orderUrl, {
         method: "POST",
         headers: {
@@ -50,7 +50,7 @@ async function main() {
       });
     })
     .then((response) => {
-      console.log("Customers submitted successfully");
+      console.log(response);
     })
     .catch((error) => {
       console.error(error);
