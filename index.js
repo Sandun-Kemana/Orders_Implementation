@@ -3,7 +3,7 @@ const {
   createAuthMiddlewareForClientCredentialsFlow,
 } = require("@commercetools/sdk-middleware-auth");
 const { createHttpMiddleware } = require("@commercetools/sdk-middleware-http");
-const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+
 const fetch = require("node-fetch");
 globalThis.fetch = fetch
 const projectKey = "custom_project";
@@ -34,7 +34,7 @@ const client = createClient({
 async function main() {
   client
     .execute({
-      uri: `/${projectKey}/orders?where=createdAt%3E"${oneHourAgo}"`,
+      uri: `/${projectKey}/orders`,
       method: "GET",
     })
     .then((result) => {
