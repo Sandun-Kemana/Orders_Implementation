@@ -42,6 +42,8 @@ async function main() {
       const orders = ordersResult.body.results;
       // Log orders to console
       console.log("Orders:", orders);
+
+      let response = 
       // Submit orders to orderUrl using POST method
       await fetch(orderUrl, {
         method: "POST",
@@ -50,10 +52,11 @@ async function main() {
         },
         body: JSON.stringify(orders),
       });
+      console.log(response);
     
    // Fetch products
   const productsResult = await client.execute({
-    uri: `/${projectKey}/products?where=createdAt%3E"${oneHourAgo}"`,
+    uri: `/${projectKey}/products`,
     method: "GET",
   });
 
@@ -61,6 +64,7 @@ async function main() {
       // Log products to console
       console.log("Products:", products);
       // Submit products to productsUrl using POST method
+      response =
       await fetch(productsUrl, {
         method: "POST",
         headers: {
@@ -68,6 +72,7 @@ async function main() {
         },
         body: JSON.stringify(products),
       });   
+      console.log(response);
 }
 
 main();
