@@ -3,7 +3,7 @@ const {
   createAuthMiddlewareForClientCredentialsFlow,
 } = require("@commercetools/sdk-middleware-auth");
 const { createHttpMiddleware } = require("@commercetools/sdk-middleware-http");
-
+const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
 const fetch = require("node-fetch");
 globalThis.fetch = fetch
 const projectKey = "custom_project";
@@ -13,6 +13,7 @@ const apiUrl = "https://api.australia-southeast1.gcp.commercetools.com";
 const authUrl = "https://auth.australia-southeast1.gcp.commercetools.com";
 
 const orderUrl = "https://commercetools.kemanamagento.web.id/order/";
+const productsUrl = "https://commercetools.kemanamagento.web.id/product/";
 
 const authMiddleware = createAuthMiddlewareForClientCredentialsFlow({
   host: authUrl,
@@ -32,30 +33,41 @@ const client = createClient({
 });
 
 async function main() {
-  client
-    .execute({
-      uri: `/${projectKey}/orders`,
-      method: "GET",
-    })
-    .then((result) => {
-      const orders = result.body.results;
+  // Fetch orders
+  const ordersResult = await client.execute({
+    uri: `/${projectKey}/orders?where=createdAt%3E"${oneHourAgo}"`,
+    method: "GET",
+  });
+
+      const orders = ordersResult.body.results;
       // Log orders to console
       console.log("Orders:", orders);
       // Submit orders to orderUrl using POST method
-      return fetch(orderUrl, {
+      await fetch(orderUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(orders),
       });
-    })
-    .then((response) => {
-      console.log(response);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+    
+   // Fetch products
+  const productsResult = await client.execute({
+    uri: `/${projectKey}/products?where=createdAt%3E"${oneHourAgo}"`,
+    method: "GET",
+  });
+
+      const products = productsResult.body.results;
+      // Log products to console
+      console.log("Products:", products);
+      // Submit orders to productsUrl using POST method
+      await fetch(productsUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(products),
+      });   
 }
 
 main();
