@@ -60,7 +60,7 @@ async function main() {
       const products = productsResult.body.results;
       // Log products to console
       console.log("Products:", products);
-      // Submit orders to productsUrl using POST method
+      // Submit products to productsUrl using POST method
       await fetch(productsUrl, {
         method: "POST",
         headers: {
